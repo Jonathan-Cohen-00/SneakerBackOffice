@@ -1,55 +1,45 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using SneakerBackOffice.Commands;
 using SneakerBackOffice.Services;
 using SneakerBackOffice.Views;
-using SneakerBackOffice.Commands;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;  // ✅ Ajouté pour `PasswordBox`
+using System.Windows.Input;
+
 namespace SneakerBackOffice.ViewModels
 {
     public class LoginViewModel : INotifyPropertyChanged
     {
-        private string _email;
-        private string _errorMessage;
-        public string Email
-        {
-            get => _email;
-            set
-            {
-                _email = value;
-                OnPropertyChanged(nameof(Email));
-            }
-        }
+        private readonly AuthService _authService;
 
-        public string ErrorMessage
-        {
-            get => _errorMessage;
-            set
-            {
-                _errorMessage = value;
-                OnPropertyChanged(nameof(ErrorMessage));
-            }
-        }
-
+        public string Email { get; set; }
+        public string ErrorMessage { get; set; }
         public ICommand LoginCommand { get; }
 
-        public LoginViewModel()
+        public LoginViewModel() { 
+        
+        }
+        public LoginViewModel(AuthService authService) // ✅ Seul AuthService est injecté
         {
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
             LoginCommand = new RelayCommand(ExecuteLogin);
         }
 
         private void ExecuteLogin(object parameter)
         {
-            if (AuthService.ValidateUser(Email, (parameter as PasswordBox).Password))
+            if (parameter is PasswordBox passwordBox && _authService.ValidateUser(Email, passwordBox.Password))
             {
-                DashboardWindow dashboard = new DashboardWindow();
-                dashboard.Show();
+                // ✅ Vérifie que `DashboardWindow` est bien importé
+                var dashboardWindow = new DashboardWindow();
+                dashboardWindow.Show();
+
+                // ✅ Ferme la fenêtre actuelle (LoginWindow)
                 Application.Current.Windows[0]?.Close();
             }
             else
             {
                 ErrorMessage = "Invalid email or password";
+                OnPropertyChanged(nameof(ErrorMessage));
             }
         }
 

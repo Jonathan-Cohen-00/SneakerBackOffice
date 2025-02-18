@@ -3,9 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:SneakerBackOffice.ViewModels"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-
-        Title="Login" Height="300" Width="400"
-        ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Login"
+        Width="1920" MinWidth="300" MaxWidth="1920"
+        Height="auto" MinHeight="300"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen">
 
     <Window.DataContext>
         <vm:LoginViewModel/>
@@ -14,33 +16,50 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <!-- Header -->
             <RowDefinition Height="*"/>
+            <!-- Form -->
+            <RowDefinition Height="Auto"/>
+            <!-- Footer -->
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <!-- 🟦 Header -->
+        <TextBlock Text="Connexion"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Grid.Row="0"
+                   Margin="0,20,0,20"/>
 
-        <TextBlock Text="Email:" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" 
-                 Grid.Row="1" Grid.Column="1" Height="30" HorizontalAlignment="Stretch"/>
+        <!-- 🟩 Contenu : Formulaire -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="30" VerticalAlignment="Center">
+                <TextBlock Text="Email:" Margin="0,0,0,5"/>
+                <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+                         Height="40"/>
 
-        <TextBlock Text="Password:" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center"/>
-        <PasswordBox Name="PasswordBox" Grid.Row="3" Grid.Column="1" Height="30" Margin="0,10,0,182"/>
+                <TextBlock Text="Password:" Margin="15,10,0,5"/>
+                <PasswordBox Name="PasswordBox" Height="40"/>
 
-        <Button Content="Login"
-        Grid.Row="4" Grid.Column="1"
-        Width="100" Height="40"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Command="{Binding LoginCommand}"/>
+                <!-- 🔘 Bouton Login -->
+                <Button Content="Login"
+                        Height="45"
+                        Margin="20,20,20,10"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        Command="{Binding LoginCommand}"/>
 
+                <!-- ❌ Message d'erreur -->
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="Red"
+                           HorizontalAlignment="Center"
+                           Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"/>
+            </StackPanel>
+        </ScrollViewer>
 
-        <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" 
-                   Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center"/>
+        <!-- 🔶 Footer -->
+        <TextBlock Text="© 2025 SneakerBackOffice"
+                   Grid.Row="2"
+                   HorizontalAlignment="Center"
+                   Margin="5"/>
     </Grid>
 </Window>

@@ -24,24 +24,9 @@ namespace SneakerBackOffice.ViewModels
 
         public DashboardViewModel()
         {
-            Products = new ObservableCollection<Product>();
-            RefreshCommand = new RelayCommand(_ => LoadSneakers());
-            LoadSneakers();
         }
 
-        private void LoadSneakers()
-        {
-            Products.Clear();
-            DataTable dataTable = DatabaseService.GetSneakers();
-
-            foreach (DataRow row in dataTable.Rows)
-            {
-                Products.Add(new Product
-                {
-                    Id = (int)row["id"],
-                });
-            }
-        }
+   
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
