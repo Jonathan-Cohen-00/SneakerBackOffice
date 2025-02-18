@@ -4,7 +4,7 @@ using System.Data;
 using System.Windows.Input;
 using SneakerBackOffice.Models;
 using SneakerBackOffice.Services;
-
+using SneakerBackOffice.Commands;   
 namespace SneakerBackOffice.ViewModels
 {
     public class DashboardViewModel : INotifyPropertyChanged
@@ -24,7 +24,7 @@ namespace SneakerBackOffice.ViewModels
 
         public DashboardViewModel()
         {
-            Products = new ObservableCollection<Sneaker>();
+            Products = new ObservableCollection<Product>();
             RefreshCommand = new RelayCommand(_ => LoadSneakers());
             LoadSneakers();
         }
@@ -36,12 +36,9 @@ namespace SneakerBackOffice.ViewModels
 
             foreach (DataRow row in dataTable.Rows)
             {
-                Products.Add(new Sneaker
+                Products.Add(new Product
                 {
                     Id = (int)row["id"],
-                    Name = row["name"].ToString(),
-                    Brand = row["brand"].ToString(),
-                    Price = (double)row["price"]
                 });
             }
         }
